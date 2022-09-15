@@ -1,5 +1,7 @@
 #include "external.h"
 
+/* NOT TESTED */
+
 bool run_touch(void) {
     return true;
 }

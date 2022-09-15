@@ -4,6 +4,8 @@
 #include <xc.h> 
 #include "stdbool.h"
 #include "stdint.h"
+#include "mdps.h"
+#include "ss.h"
 
 enum NavStates {
     Forward,
@@ -21,6 +23,8 @@ struct NAVCON {
     uint8_t blue_count;
     uint16_t AOI_correction;
 };
+
+void run_navcon(struct MDPS* motorSystem, struct SS *sensorSystem, struct NAVCON* navcon);
 
 #endif	/* NAVCON_H */
 
