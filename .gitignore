@@ -1,0 +1,9 @@
+# ignore all files/folders that MPLAB made
+/dist
+/debug 
+/mcc_generated_files
+/build
+/nbproject
+/.vscode
+EPR320_Prac2.mc3
+Makefile
