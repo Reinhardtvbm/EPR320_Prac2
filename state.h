@@ -1,11 +1,3 @@
-/* 
- * File: state.h
- * Author: Reinhardt von Brandis-Martini
- * Comments: functions to run the states in the system's state machine 
- * Revision history: 0.1
- * Date: 3 September 2022
- */
- 
 #ifndef STATES_H
 #define	STATES_H
 
@@ -34,4 +26,3 @@ void run_maze(enum States* state, struct MDPS* motorSystem, struct SS* sensorSys
 void run_sos(enum States* state);
 
 #endif	/* STATES_H */
-

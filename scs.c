@@ -1,11 +1,3 @@
-/* 
- * File: scs.h
- * Author: Reinhardt von Brandis-Martini
- * Comments: An set of functions to abstract the finicky of the SCS for ERD 320 prac 2 
- * Revision history: 0.1
- * Date: 3 September 2022
- */
-
 #include "scs.h"
 
 void send_packet(struct Packet p) {

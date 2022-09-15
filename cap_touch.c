@@ -1,5 +1,7 @@
 #include "cap_touch.h"
 
+/* NOT TESTED */
+
 #define _XTAL_FREQ 64000000
 
 uint8_t calibrate_cap_touch(void) {

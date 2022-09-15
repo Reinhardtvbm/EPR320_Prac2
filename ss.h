@@ -18,4 +18,3 @@ struct SS {
 };
 
 #endif	/* SS_H */
-

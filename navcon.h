@@ -1,9 +1,3 @@
-/* 
- * File:   
- * Author: 
- * Comments:
- * Revision history: 
- */  
 #ifndef NAVCON_H
 #define	NAVCON_H
 
