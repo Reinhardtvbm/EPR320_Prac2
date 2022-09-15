@@ -12,14 +12,22 @@ enum NavStates {
     Reverse,
     RotateRight,
     RotateLeft,
-    Stop
+    Stop,
+    MazeDone
 };
+
+enum SensorPosition {
+    Left, 
+    Right,
+    Unseen
+}
 
 struct NAVCON {
     enum NavStates state;
     enum NavStates prev;
     enum NavStates next;
-    bool stopped;
+    enum SensorPosition first_red;
+    uint8_t red_at_sensor;
     uint8_t blue_count;
     uint16_t AOI_correction;
 };

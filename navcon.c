@@ -4,12 +4,44 @@ void run_navcon(struct MDPS* motorSystem, struct SS *sensorSystem, struct NAVCON
     uint8_t white_count = 0;
     uint8_t green_count = 0;
     uint8_t blue_count = 0;
-    
+    uint8_t red_count = 0;
+
     // loop through the sensor values to count the number of sensors that see each colour
     for (int i = 0; i < 5; i++) {
         switch (sensorSystem->sensor[i]) {
             case White: {white_count++; break;}
-            case Red: {green_count++; break;}
+            case Red: {                
+                case (navcon->first_red) {
+                    Unseen:{
+                        if (i < 3) {
+                            navcon->first_red = Left;
+                        }
+                        else {
+                            navcon->first_red = Right;
+                        }
+                    break;}
+
+                    Right:{
+                        if (i == 0) {
+                            navcon->state = MazeDone;
+                            return;
+                        }
+
+                        break;
+                    }
+
+                    Left:{
+                        if (i == 4) {
+                            navcon->state = MazeDone;
+                            return;
+                        }
+
+                        break;
+                    }
+                }
+                     
+                break;
+            }
             case Green: {green_count++; break;}
             case Blue: {blue_count++; break;}
             case Black: {blue_count++; break;}
@@ -25,6 +57,7 @@ void run_navcon(struct MDPS* motorSystem, struct SS *sensorSystem, struct NAVCON
             }
             else {
                 if (blue_count == 0 && sensorSystem->incidence <= 5) {
+
                     return;
                 }
                 
@@ -120,6 +153,12 @@ void run_navcon(struct MDPS* motorSystem, struct SS *sensorSystem, struct NAVCON
             
             navcon->state = navcon->next;
             
+            break;
+        case MazeDone:
+            /* code */
+            navcon->AOI_correction = 360;
+            nacon->state = RotateRight;
+
             break;
     }
 }
