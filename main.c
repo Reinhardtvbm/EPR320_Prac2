@@ -33,7 +33,10 @@ void main(void)
     
     // first round of NAVCON with give forward with no rotation, hence:
     navcon.state = Forward;
-    navcon.stopped = false;
+    navcon.next = Forward;
+    navcon.prev = Forward;
+    navcon.red_at_sensor = 255;
+    navcon.first_red = Unseen;
     navcon.AOI_correction = 0;
     navcon.blue_count = 0;
 

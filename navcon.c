@@ -1,43 +1,51 @@
 #include "navcon.h"
+#include "state.h"
 
 void run_navcon(struct MDPS* motorSystem, struct SS *sensorSystem, struct NAVCON* navcon) {
     uint8_t white_count = 0;
     uint8_t green_count = 0;
     uint8_t blue_count = 0;
-    uint8_t red_count = 0;
 
     // loop through the sensor values to count the number of sensors that see each colour
     for (int i = 0; i < 5; i++) {
         switch (sensorSystem->sensor[i]) {
             case White: {white_count++; break;}
-            case Red: {                
-                case (navcon->first_red) {
-                    Unseen:{
+            case Red: {      
+                switch (navcon->first_red) {
+                    case Unseen:{
                         if (i < 3) {
                             navcon->first_red = Left;
                         }
                         else {
                             navcon->first_red = Right;
                         }
-                    break;}
+                        
+                        break;
+                    }
 
-                    Right:{
-                        if (i == 0) {
-                            navcon->state = MazeDone;
+                    case Right: {
+                        if (i == 0 && sensorSystem->incidence <= 5) {
+                            navcon->first_red = CrossedLine;
                             return;
                         }
 
                         break;
                     }
 
-                    Left:{
-                        if (i == 4) {
-                            navcon->state = MazeDone;
+                    case Left: {
+                        if (i == 4 && sensorSystem->incidence <= 5) {
+                            navcon->first_red = CrossedLine;
                             return;
                         }
 
                         break;
                     }
+                    
+                    case CrossedLine: {
+                        /* do nothing */
+                        break;
+                    }
+                    green_count++;
                 }
                      
                 break;
@@ -48,11 +56,17 @@ void run_navcon(struct MDPS* motorSystem, struct SS *sensorSystem, struct NAVCON
         }
     }
     
+    
+    
     switch (navcon->state){
         /* what to do if we are busy going FORWARD */
         case Forward:
             if (white_count == 5) {
                 // if all white, continue going forward
+                if (navcon->first_red == CrossedLine) {
+                    navcon->state = MazeDone;
+                }
+                
                 return;
             }
             else {
@@ -157,7 +171,7 @@ void run_navcon(struct MDPS* motorSystem, struct SS *sensorSystem, struct NAVCON
         case MazeDone:
             /* code */
             navcon->AOI_correction = 360;
-            nacon->state = RotateRight;
+            navcon->state = RotateRight;
 
             break;
     }

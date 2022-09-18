@@ -19,8 +19,9 @@ enum NavStates {
 enum SensorPosition {
     Left, 
     Right,
-    Unseen
-}
+    Unseen,
+    CrossedLine
+};
 
 struct NAVCON {
     enum NavStates state;

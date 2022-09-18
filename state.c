@@ -128,6 +128,9 @@ void run_maze(enum States* state, struct MDPS* motorSystem, struct SS* sensorSys
         case Stop: {
             /* no need to change the packet*/
         }
+        case MazeDone: {
+            /* no need to change the packet*/
+        }
     }
     
     send_packet(packet_out);
