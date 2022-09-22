@@ -17,9 +17,10 @@ enum NavStates {
 };
 
 enum SensorPosition {
-    Left, 
+    Left,
     Right,
     Unseen,
+    Seen,
     CrossedLine
 };
 
@@ -28,6 +29,9 @@ struct NAVCON {
     enum NavStates prev;
     enum NavStates next;
     enum SensorPosition first_red;
+    enum SensorPosition first_detect;
+    enum Colours reference_colour;
+    uint16_t reference_distance;
     uint8_t red_at_sensor;
     uint8_t blue_count;
     uint16_t AOI_correction;

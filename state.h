@@ -8,11 +8,6 @@
 #include "mdps.h"
 #include "navcon.h"
 
-#define FORWARD 0;
-#define BACKWARD 1;
-#define LEFT 2;
-#define RIGHT 3;
-
 enum States {
   Idle,
   Calibrate,

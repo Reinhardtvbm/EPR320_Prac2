@@ -40,14 +40,5 @@ struct Packet receive_packet(void);
 
 void reset_packet(struct Packet* p);
 
-// creates a new queue for incoming packets
-struct Node create_queue(struct Packet p);
-
-// add a new packet to the queue
-void append_packet(struct Packet p, struct Node* head);
-
-// get next packet in the queue
-struct Packet get_packet(struct Node* head);
-
 #endif	/* SCS_H */
 

@@ -37,6 +37,8 @@ void main(void)
     navcon.prev = Forward;
     navcon.red_at_sensor = 255;
     navcon.first_red = Unseen;
+    navcon.reference_colour = White;
+    navcon.reference_distance = 200;
     navcon.AOI_correction = 0;
     navcon.blue_count = 0;
 

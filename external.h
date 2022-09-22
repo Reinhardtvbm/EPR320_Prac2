@@ -9,7 +9,7 @@
 #ifndef EXTERNAL_H
 #define	EXTERNAL_H
 
-#include <xc.h> // include processor files - each processor file is guarded.  
+#include <xc.h>
 #include <stdbool.h>
 
 bool run_touch(void);
