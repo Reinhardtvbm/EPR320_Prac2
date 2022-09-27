@@ -29,8 +29,9 @@ struct NAVCON {
     enum NavStates prev;
     enum NavStates next;
     enum SensorPosition first_red;
-    enum SensorPosition first_detect;
-    enum Colours reference_colour;
+    bool outside_sensor;
+    enum SensorPosition first_sensor_side;
+    enum Colours colour;
     uint16_t reference_distance;
     uint8_t red_at_sensor;
     uint8_t blue_count;

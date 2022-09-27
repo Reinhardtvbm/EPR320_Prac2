@@ -37,23 +37,23 @@ void main(void)
     navcon.prev = Forward;
     navcon.red_at_sensor = 255;
     navcon.first_red = Unseen;
-    navcon.reference_colour = White;
+    navcon.colour = White;
+    navcon.outside_sensor = false;
     navcon.reference_distance = 200;
     navcon.AOI_correction = 0;
     navcon.blue_count = 0;
 
-    // create packet for start instruction from the HUB
-    struct Packet in_packet = {{1,1,1,1}};
     
-    // wait for | 0 | 0 | 0 | 0 | from the HUB
-    while (in_packet.bytes[controlByte] != 0x00) {in_packet = receive_packet();} 
-
+    
+    PIR1bits.TX1IF = 0;     // clear TX interrupt flag
+    TXREG1 = 0;             // clear TX Register
+    TXSTA1bits.TXEN = 1;    // enable transmit
     // set startup state to idle  
     enum States state = Idle;
     
     while (1){
-        // here I pass in a pointer to the state (&state), which each function can then manipulate
-        // after the function has finished its processing, the program will rteturn here and run the 
+        // here I pass in a pointer to the state (&state), which each function can then manipulate.
+        // After the function has finished its processing, it will return to this switch and run the 
         // next state (which gets set by the previous function)
         // =============================================================================
         // e.g. run_idle() sets state to Calibrate, then run_calibrate() will run and set

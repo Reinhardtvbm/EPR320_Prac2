@@ -5,9 +5,14 @@
 #include "stdlib.h"
 
 void run_idle(enum States* state) {
+    // create packet for start instruction from the HUB
+    struct Packet in_packet = {{1,1,1,1}};
+    
+    // wait for | 0 | 0 | 0 | 0 | from the HUB
+    while (in_packet.bytes[controlByte] != 0x00) {in_packet = receive_packet();} 
+    
     struct Packet packet_out;
     reset_packet(&packet_out);
-
     packet_out.bytes[controlByte] = 16;
     
     send_packet(packet_out);
@@ -62,6 +67,9 @@ void run_calibrate(enum States* state){
 void run_maze(enum States* state, struct MDPS* motorSystem, struct SS* sensorSystem, struct NAVCON* navcon){
     struct Packet packet_in;
     struct Packet packet_out;
+    // ALWAYS RESET PACKETS AT BEGINNING OF FUNCTION
+    // the programmer keeps the memory, and does not reset it (i.e. it does not create a new struct when the function runs again)
+    reset_packet(&packet_in);
     reset_packet(&packet_out);
 
     packet_out.bytes[controlByte] = 145;
@@ -135,11 +143,18 @@ void run_maze(enum States* state, struct MDPS* motorSystem, struct SS* sensorSys
     struct Packet packets[6];
 
     // wait for level data from MDPS
-    while (packet_in.bytes[controlByte] != 161) {
+    while (packet_in.bytes[controlByte] != 161 && packet_in.bytes[controlByte] != 1) {
         packet_in = receive_packet();
     }
     
     packets[0] = packet_in;
+    struct Packet packet = {{1,1,1,1}};
+    if (packets[0].bytes[controlByte] == 1) {
+        *state = Idle;
+        send_packet(packet_in);
+        return;
+    }
+    
     
     // wait for rotation data from MDPS
     while (packet_in.bytes[controlByte] != 162) {
