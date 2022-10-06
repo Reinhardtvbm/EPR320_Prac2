@@ -93,8 +93,6 @@ void blue_encounter(struct NAVCON* navcon, uint8_t incidence, enum SensorPositio
     if (incidence >= 45) {
         navcon->AOI_correction = 5;
     }
-    
-    navcon->prev_colour = Blue;
 }
 
 void greater_than_45(struct NAVCON* navcon, enum SensorPosition side){
@@ -121,8 +119,13 @@ void less_than_45(struct NAVCON* navcon, enum SensorPosition side, uint8_t incid
         case Red:
             red_encounter(navcon, incidence, side);
             break;
+        case Blue:
+            blue_encounter(navcon, incidence, side);
+            navcon->prev_colour = Blue;
+            break;
         default:
             blue_encounter(navcon, incidence, side);
+            navcon->prev_colour = Black;
             break;
     }
 }
