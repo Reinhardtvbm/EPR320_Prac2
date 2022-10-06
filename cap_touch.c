@@ -4,17 +4,17 @@
 
 #define _XTAL_FREQ 64000000
 
-uint8_t calibrate_cap_touch(void) {
+uint32_t calibrate_cap_touch(void) {
     // calibrate the cap touch threshold
-    uint8_t max = 0;
+    uint32_t sum = 0;
     uint8_t count = 0;
+    ANSELAbits.ANSA1 = 0;
     
-    
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 100; i++) {
         // set RA1 to output
         TRISAbits.TRISA1 = 0;
         
-        // set RA0 to 1 and let cap charge
+        // set RA1 to 1 and let cap charge
         PORTAbits.RA1 = 1;
         __delay_ms(1);
         
@@ -27,13 +27,11 @@ uint8_t calibrate_cap_touch(void) {
         }
         
         // if a new max is found then set max to that value
-        if (count > max) {
-            max = count;
-        }
+        sum += count;
         
         count = 0;
     }
     
     // change the threshold with testing
-    return max + 10;
+    return (uint32_t)(sum / 100);
 }

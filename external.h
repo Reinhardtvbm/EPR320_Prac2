@@ -11,8 +11,9 @@
 
 #include <xc.h>
 #include <stdbool.h>
+#include <stdint.h>
 
-bool run_touch(void);
+bool run_touch(uint32_t threshold, uint32_t* counts);
 bool run_clap(void);
 
 #endif	/* EXTERNAL_H */

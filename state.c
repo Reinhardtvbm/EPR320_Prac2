@@ -4,12 +4,24 @@
 #include "navcon.h"
 #include "stdlib.h"
 
-void run_idle(enum States* state) {
+void run_idle(enum States* state, struct NAVCON* navcon) {
     // create packet for start instruction from the HUB
     struct Packet in_packet = {{1,1,1,1}};
     
     // wait for | 0 | 0 | 0 | 0 | from the HUB
     while (in_packet.bytes[controlByte] != 0x00) {in_packet = receive_packet();} 
+    
+    navcon->state = Forward;
+    navcon->next = Forward;
+    navcon->prev = Forward;
+    navcon->red_at_sensor = 255;
+    navcon->first_red = Unseen;
+    navcon->prev_colour = White;
+    navcon->colour = White;
+    navcon->outside_sensor = false;
+    navcon->reference_distance = 200;
+    navcon->AOI_correction = 0;
+    navcon->blue_count = 0;
     
     struct Packet packet_out;
     reset_packet(&packet_out);
@@ -17,7 +29,9 @@ void run_idle(enum States* state) {
     
     send_packet(packet_out);
 
-    while (run_touch() == false) {
+    uint32_t* test;
+    
+    while (run_touch(10, test) == false) {
         send_packet(packet_out);
     }
 
@@ -44,8 +58,9 @@ void run_calibrate(enum States* state){
     }
 
     send_packet(packet_out);
+    uint32_t* test;
     
-    while (run_touch() == false) {
+    while (run_touch(10, test) == false) {
         packet_in = receive_packet();
         // do display stuff with MDPS data
         packet_in = receive_packet();
@@ -87,7 +102,9 @@ void run_maze(enum States* state, struct MDPS* motorSystem, struct SS* sensorSys
 
     send_packet(packet_out);
     
-    if (run_touch() == false) {
+    uint32_t* test;
+    
+    if (run_touch(10, test) == false) {
         // go back to idle ;-;, hard coded so it won't go back for now
         *state = Idle;
         return;

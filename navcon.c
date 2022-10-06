@@ -5,6 +5,7 @@
 #define ISD 10
 
 void green_encounter(struct NAVCON* navcon, uint8_t incidence, enum SensorPosition position) {
+    navcon->prev_colour = Green;
     if (incidence <= 5) {
         navcon->state = Forward;
         return;
@@ -30,6 +31,7 @@ void green_encounter(struct NAVCON* navcon, uint8_t incidence, enum SensorPositi
 }
 
 void red_encounter(struct NAVCON* navcon, uint8_t incidence, enum SensorPosition position) {
+    navcon->prev_colour = Red;
     if (incidence <= 5) {
         if (navcon->first_red == Unseen) {
             switch (position) {
@@ -62,6 +64,7 @@ void blue_encounter(struct NAVCON* navcon, uint8_t incidence, enum SensorPositio
 
     navcon->prev = Forward;
     navcon->state = Stop;
+    
 
 
     switch (position) {
@@ -74,6 +77,24 @@ void blue_encounter(struct NAVCON* navcon, uint8_t incidence, enum SensorPositio
             navcon->AOI_correction += 90;
             break;
     }
+    
+    if (navcon->prev_colour == Blue) {
+        switch (position) {
+            case Left:
+                navcon->next = RotateRight;
+                break;
+            case Right:
+                navcon->next = RotateRight;
+                break;
+        }
+        navcon->AOI_correction = 90 + (uint16_t)incidence;
+    }
+    
+    if (incidence >= 45) {
+        navcon->AOI_correction = 5;
+    }
+    
+    navcon->prev_colour = Blue;
 }
 
 void greater_than_45(struct NAVCON* navcon, enum SensorPosition side){
@@ -142,23 +163,34 @@ void run_navcon(struct MDPS* motor_system, struct SS* sensor_system, struct NAVC
                     navcon->colour = White;
                     navcon->outside_sensor = false;
                 }
-                else if (navcon->first_red == Seen) {
-                    if (sensor_system->sensor[navcon->red_at_sensor] == Red) {
-                        navcon->first_red = CrossedLine;
-                    }
-                    
-                    if (navcon->first_red == CrossedLine) {
-                        if (sensor_system->sensor[navcon->red_at_sensor] == White) {
-                            navcon->state = MazeDone;
-                        }
-                    } 
-                }
-                  
+                 
             }
+            if (navcon->first_red == Seen) {
+//                    if (sensor_system->sensor[navcon->red_at_sensor] == Red) {
+//                        navcon->first_red = CrossedLine;
+//                    }
+//                    
+//                    if (navcon->first_red == CrossedLine) {
+//                        if (sensor_system->sensor[navcon->red_at_sensor] == White) {
+//                            navcon->state = MazeDone;
+//                        }
+//                      }
+                int red_count = 0;
+                
+                for (int i = 0; i < 5; i++) {
+                    if (sensor_system->sensor[i] == Red) {
+                        red_count++;
+                    }
+                }
+                
+                if (red_count == 0) {
+                    navcon->state = MazeDone;
+                }
+            } 
             break;
         case Reverse:
             // until some distance covered, keep reversing....
-            if (motor_system->distance < ISD+10) {
+            if (motor_system->distance < 10) {
                 return;
             }
 

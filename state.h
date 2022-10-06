@@ -15,7 +15,7 @@ enum States {
   Sos
 };
 
-void run_idle(enum States* state);
+void run_idle(enum States* state, struct NAVCON* navcon);
 void run_calibrate(enum States* state);
 void run_maze(enum States* state, struct MDPS* motorSystem, struct SS* sensorSystem, struct NAVCON* navcon);
 void run_sos(enum States* state);
